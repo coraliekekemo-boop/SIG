@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: sig_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sigdb
+      POSTGRES_USER: siguser
+      POSTGRES_PASSWORD: sigpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - sig_postgis_data:/var/lib/postgresql/data
+
+volumes:
+  sig_postgis_data:
