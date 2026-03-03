@@ -49,27 +49,38 @@ Index creees:
 
 ## Prerequis
 
-- Docker (pour PostGIS)
 - Node.js 18+
+- PostgreSQL 14+ avec extension PostGIS
+- `psql` (ou pgAdmin) pour executer le script SQL
 
 ## Installation et lancement
 
-### 1) Base de donnees PostGIS
+### 1) Base de donnees PostGIS (sans Docker)
 
-Depuis la racine du projet:
+Creer une base locale (exemple):
+
+```sql
+CREATE USER siguser WITH PASSWORD 'sigpass';
+CREATE DATABASE sigdb OWNER siguser;
+```
+
+Executer ensuite le script d initialisation:
 
 ```bash
-docker compose up -d
+psql -U siguser -d sigdb -f database/init.sql
 ```
 
 Le script `database/init.sql`:
 
-- cree les extensions PostGIS et pgcrypto
-- cree les tables
+- active `postgis` et `pgcrypto`
+- cree les tables (`users`, `vehicles`, `vehicle_positions`)
+- cree les index (GIST + B-tree)
 - ajoute un utilisateur seed:
   - username: `admin`
   - password: `admin123`
 - ajoute 2 vehicules de demonstration
+
+Si `CREATE EXTENSION` est refuse, execute le script avec un compte PostgreSQL superuser.
 
 ### 2) Backend
 
@@ -133,5 +144,7 @@ POST /api/positions
 ## Notes
 
 - Le frontend envoie le token JWT via `Authorization: Bearer <token>`.
-- Le tracage polyline apparait lorsque l utilisateur clique sur `Trajet` dans la liste des vehicules.
-- Toutes les contraintes demandees (stack, architecture, PostGIS, indexation, README) sont couvertes dans cette version.
+- Le tracage polyline apparait l orsque l utilisateur clique sur `Trajet` dans la liste des vehicules.
+- Cette version ne depend pas de Docker: backend, frontend et PostgreSQL/PostGIS tournent en local.
+- Toutes les contraintes demandees (stack, architecture, PostGIS, indexation, README) sont couvertes.
+ 
