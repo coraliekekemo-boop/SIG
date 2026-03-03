@@ -1,8 +1,9 @@
 import { useState } from "react";
 
-export default function LoginForm({ onLogin }) {
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin123");
+export default function LoginForm({ onLogin, onRegister }) {
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -11,7 +12,11 @@ export default function LoginForm({ onLogin }) {
     setError("");
     setLoading(true);
     try {
-      await onLogin(username, password);
+      if (isRegisterMode) {
+        await onRegister(username, password);
+      } else {
+        await onLogin(username, password);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -21,7 +26,7 @@ export default function LoginForm({ onLogin }) {
 
   return (
     <div className="card login-card">
-      <h2>Connexion</h2>
+      <h2>{isRegisterMode ? "Inscription" : "Connexion"}</h2>
       <form onSubmit={submit}>
         <label>
           Utilisateur
@@ -37,11 +42,26 @@ export default function LoginForm({ onLogin }) {
           />
         </label>
         <button type="submit" disabled={loading}>
-          {loading ? "Connexion..." : "Se connecter"}
+          {loading
+            ? isRegisterMode
+              ? "Inscription..."
+              : "Connexion..."
+            : isRegisterMode
+            ? "Creer un compte"
+            : "Se connecter"}
         </button>
       </form>
       {error ? <p className="error">{error}</p> : null}
-      <p className="hint">Compte seed: admin / admin123</p>
+      <button
+        type="button"
+        className="ghost"
+        onClick={() => {
+          setIsRegisterMode((current) => !current);
+          setError("");
+        }}
+      >
+        {isRegisterMode ? "J ai deja un compte" : "Creer un compte"}
+      </button>
     </div>
   );
 }

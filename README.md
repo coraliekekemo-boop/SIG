@@ -11,7 +11,7 @@ Application web complete pour gerer une flotte de vehicules et visualiser leurs 
 
 ## Fonctionnalites implementees
 
-- Connexion utilisateur simple avec validation basique
+- Inscription + connexion utilisateur simple avec validation basique
 - CRUD vehicules (create, read, update, delete)
 - Enregistrement des positions GPS
 - Affichage des derniers points sur carte OpenStreetMap
@@ -107,6 +107,7 @@ Frontend disponible sur `http://localhost:5173`.
 
 ## API principale
 
+- `POST /api/auth/register`
 - `POST /api/auth/login`
 - `GET /api/vehicles`
 - `POST /api/vehicles`
@@ -119,6 +120,16 @@ Frontend disponible sur `http://localhost:5173`.
 - `GET /api/positions/search/nearest?lat=...&lng=...`
 
 ## Exemples rapides
+
+Inscription:
+
+```json
+POST /api/auth/register
+{
+  "username": "coralie",
+  "password": "monmotdepasse"
+}
+```
 
 Connexion:
 
@@ -146,5 +157,6 @@ POST /api/positions
 - Le frontend envoie le token JWT via `Authorization: Bearer <token>`.
 - Le tracage polyline apparait l orsque l utilisateur clique sur `Trajet` dans la liste des vehicules.
 - Cette version ne depend pas de Docker: backend, frontend et PostgreSQL/PostGIS tournent en local.
+- Le compte seed `admin/admin123` reste present pour une connexion rapide, mais tu peux creer ton propre compte depuis l ecran d accueil.
 - Toutes les contraintes demandees (stack, architecture, PostGIS, indexation, README) sont couvertes.
  

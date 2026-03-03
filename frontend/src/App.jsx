@@ -67,6 +67,13 @@ function App() {
     clearNotice();
   };
 
+  const register = async (username, password) => {
+    const data = await api.register(username, password);
+    localStorage.setItem(tokenStorageKey, data.token);
+    setToken(data.token);
+    clearNotice();
+  };
+
   const logout = () => {
     localStorage.removeItem(tokenStorageKey);
     setToken(null);
@@ -174,7 +181,7 @@ function App() {
   if (!token) {
     return (
       <main className="centered">
-        <LoginForm onLogin={login} />
+        <LoginForm onLogin={login} onRegister={register} />
       </main>
     );
   }

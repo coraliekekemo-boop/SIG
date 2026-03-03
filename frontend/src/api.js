@@ -29,6 +29,12 @@ const request = async (path, options = {}, token) => {
 };
 
 export const api = {
+  register: (username, password) =>
+    request("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ username, password }),
+    }),
+
   login: (username, password) =>
     request("/auth/login", {
       method: "POST",
